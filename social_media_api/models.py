@@ -37,6 +37,12 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
+class Profile(models.Model):
+    profile_picture = models.URLField(max_length=255)
+    bio = models.TextField()
+#     posts
+
+
 class User(AbstractUser):
     username = None
     email = models.EmailField(_("email address"), unique=True)
@@ -45,6 +51,8 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return f"{self.last_name} {self.first_name}"
