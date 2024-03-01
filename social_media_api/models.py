@@ -42,6 +42,9 @@ class Profile(models.Model):
     bio = models.TextField()
 #     posts
 
+    def __str__(self):
+        return f"Profile {self.user.first_name} {self.user.last_name}"
+
 
 class User(AbstractUser):
     username = None
@@ -52,7 +55,7 @@ class User(AbstractUser):
 
     objects = UserManager()
 
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return f"{self.last_name} {self.first_name}"
