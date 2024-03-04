@@ -38,6 +38,11 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
+class Post(models.Model):
+    image = models.ImageField(null=True)
+    text = models.TextField()
+
+
 class Profile(models.Model):
     profile_picture = models.URLField(
         max_length=255,
@@ -50,7 +55,7 @@ class Profile(models.Model):
     follows = models.ManyToManyField(
         "self", related_name="followed_by", symmetrical=False, blank=True
     )
-    #     posts
+    posts = models.ForeignKey(Post, related_name="profile", on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return f"Profile {self.user.username}"

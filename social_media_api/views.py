@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 
-from social_media_api.models import User, Profile
-from social_media_api.serializers import UserSerializer, ProfileSerializer
+from social_media_api.models import User, Profile, Post
+from social_media_api.serializers import UserSerializer, ProfileSerializer, PostSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -18,3 +18,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
         if username is not None:
             queryset = queryset.filter(user__username__icontains=username)
         return queryset
+
+
+class PostViewSet(viewsets.ModelViewSet):
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
