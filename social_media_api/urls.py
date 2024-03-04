@@ -7,7 +7,7 @@ from social_media_api.views import (
 
 router = DefaultRouter()
 router.register("user", UserViewSet)
-router.register("profile", ProfileViewSet)
+router.register("profile", ProfileViewSet, basename="profile")
 
 urlpatterns = router.urls
 

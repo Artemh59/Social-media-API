@@ -9,6 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = get_user_model()
         fields = (
             "id",
+            "username",
             "first_name",
             "last_name",
             "profile",
@@ -32,6 +33,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(source="user.username", read_only=True)
+
     class Meta:
         model = Profile
-        fields = ("id", "profile_picture", "bio")
+        fields = ("id", "user", "profile_picture", "bio")

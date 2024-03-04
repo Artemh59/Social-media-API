@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -37,17 +38,8 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
-class Profile(models.Model):
-    profile_picture = models.URLField(max_length=255)
-    bio = models.TextField()
-    #     posts
-
-    def __str__(self):
-        return f"Profile {self.user.first_name} {self.user.last_name}"
-
-
 class User(AbstractUser):
-    username = None
+    username = models.CharField(max_length=255)
     email = models.EmailField(_("email address"), unique=True)
 
     USERNAME_FIELD = "email"
@@ -55,7 +47,16 @@ class User(AbstractUser):
 
     objects = UserManager()
 
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, null=True)
-
     def __str__(self):
         return f"{self.last_name} {self.first_name}"
+
+
+class Profile(models.Model):
+    profile_picture = models.URLField(max_length=255)
+    bio = models.TextField()
+    date_of_birth = models.DateField(null=True)
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, null=True)
+    #     posts
+
+    def __str__(self):
+        return f"Profile {self.user.first_name} {self.user.last_name}"
