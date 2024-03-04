@@ -40,7 +40,7 @@ class UserManager(BaseUserManager):
 class Profile(models.Model):
     profile_picture = models.URLField(max_length=255)
     bio = models.TextField()
-#     posts
+    #     posts
 
     def __str__(self):
         return f"Profile {self.user.first_name} {self.user.last_name}"
