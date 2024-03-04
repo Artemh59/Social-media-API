@@ -33,8 +33,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    user = serializers.CharField(source="user.username", read_only=True)
+    username = serializers.CharField(source="user.username", read_only=True)
 
     class Meta:
         model = Profile
-        fields = ("id", "user", "profile_picture", "bio")
+        fields = ("id", "username", "profile_picture", "bio", "follows", "followed_by")
