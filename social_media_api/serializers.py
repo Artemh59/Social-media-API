@@ -48,6 +48,5 @@ class PostSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "profile")
 
     def create(self, validated_data):
-        user = self.context['request'].user
+        user = self.context["request"].user
         return Post.objects.create(**validated_data, profile=user.profile)
-
