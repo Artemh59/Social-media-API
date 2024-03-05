@@ -1,10 +1,10 @@
-from rest_framework import viewsets
+from rest_framework import generics
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.settings import api_settings
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
-from social_media_api.models import User, Profile, Post
+from social_media_api.models import Profile, Post
 from social_media_api.serializers import (
     UserSerializer,
     ProfileSerializer,
@@ -12,13 +12,21 @@ from social_media_api.serializers import (
 )
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+class UserRegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
 
 
-class ProfileViewSet(viewsets.ModelViewSet):
+class ManageUserView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+
+class ProfileListView(generics.ListAPIView):
     serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = Profile.objects.all()
@@ -41,8 +49,17 @@ class ProfileViewSet(viewsets.ModelViewSet):
         return super().list(request, *args, **kwargs)
 
 
-class PostViewSet(viewsets.ModelViewSet):
+class MyProfileView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user.profile
+
+
+class PostListView(generics.ListAPIView):
     serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = Post.objects.all()
@@ -72,5 +89,13 @@ class PostViewSet(viewsets.ModelViewSet):
             ),
         ],
     )
-    def list(self, request, *args, **kwargs) -> Response:
-        return super().list(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs) -> Response:
+        return super().get(request, *args, **kwargs)
+
+
+class MyPostsView(ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.request.user.profile.posts

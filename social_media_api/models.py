@@ -40,7 +40,9 @@ class UserManager(BaseUserManager):
 class Post(models.Model):
     image = models.ImageField(null=True)
     text = models.TextField()
-    profile = models.ForeignKey("Profile", on_delete=models.CASCADE)
+    profile = models.ForeignKey(
+        "Profile", related_name="posts", on_delete=models.CASCADE
+    )
     hashtags = models.CharField(max_length=255, blank=True)
 
 
