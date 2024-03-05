@@ -37,12 +37,17 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ("id", "username", "profile_picture", "bio", "posts", "follows", "followed_by")
+        fields = ("id", "username", "profile_picture", "bio", "follows", "followed_by")
 
 
 class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ("id", "profile", "image", "text")
+        fields = ("id", "profile", "image", "text", "hashtags")
+        read_only_fields = ("id", "profile")
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        return Post.objects.create(**validated_data, profile=user.profile)
 

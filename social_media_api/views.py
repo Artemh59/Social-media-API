@@ -22,4 +22,21 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
 class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
-    queryset = Post.objects.all()
+
+    def get_queryset(self):
+        queryset = Post.objects.all()
+
+        hashtag = self.request.query_params.get("hashtag")
+        if hashtag:
+            print(hashtag)
+            return queryset.filter(hashtags__icontains=hashtag)
+
+        users = self.request.user.profile
+        serializer = ProfileSerializer(users)
+        follows = serializer.data["follows"]
+        return queryset.filter(profile__id__in=follows)
+
+    def get_object(self):
+        parts = self.request.path.split('/')
+        post_id = parts[-2]
+        return Post.objects.get(id=post_id)
