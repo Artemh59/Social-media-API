@@ -3,7 +3,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from .models import User, Profile
+from social_media_api.models import User, Profile
 
 admin.site.unregister(Group)
 admin.site.register(Profile)
